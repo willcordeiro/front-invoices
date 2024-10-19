@@ -68,6 +68,7 @@ export default function EnergyConsumptionCharts() {
       const response = await api.get<EnergyData[]>("api/allPdf");
       const processedData = processData(response.data);
       setChartData(processedData.chartData);
+
       setTotalStats(processedData.totalStats);
     } catch (error) {
       console.error("Error fetching data:", error);

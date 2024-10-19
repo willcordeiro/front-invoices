@@ -1,78 +1,167 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import api from "@/config/axiosConfig";
 
-const ListTab: React.FC = () => {
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+interface Invoice {
+  id: number;
+  clientNumber: string;
+  nomeCliente: string;
+  data: string;
+  valorAPagar: string;
+  fileName: string;
+}
+
+export default function InvoiceLibrary() {
+  const [clientNumber, setClientNumber] = useState("");
   const [period, setPeriod] = useState("");
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [filteredInvoices, setFilteredInvoices] = useState<Invoice[]>([]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
+
+  useEffect(() => {
+    filterInvoices();
+  }, [clientNumber, period, invoices]);
+
+  const fetchInvoices = async () => {
+    try {
+      const response = await api.get("api/allPdf");
+      setInvoices(response.data);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+    }
+  };
+
+  const filterInvoices = () => {
+    let filtered = invoices;
+
+    if (clientNumber) {
+      filtered = filtered.filter((invoice) =>
+        invoice.clientNumber.includes(clientNumber)
+      );
+    }
+
+    if (period && period !== "all") {
+      const currentDate = new Date();
+      const filterDate = new Date(currentDate.getTime());
+
+      switch (period) {
+        case "1m":
+          filterDate.setMonth(currentDate.getMonth() - 1);
+          break;
+        case "3m":
+          filterDate.setMonth(currentDate.getMonth() - 3);
+          break;
+        case "6m":
+          filterDate.setMonth(currentDate.getMonth() - 6);
+          break;
+        case "1y":
+          filterDate.setFullYear(currentDate.getFullYear() - 1);
+          break;
+      }
+
+      filtered = filtered.filter((invoice) => {
+        const invoiceDate = new Date(invoice.data);
+        return invoiceDate >= filterDate && invoiceDate <= currentDate;
+      });
+    }
+
+    setFilteredInvoices(filtered);
+  };
+
+  const handleDownload = (fileName: string) => {
+    console.log(`Downloading file: ${fileName}`);
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Nome
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Filtrar por nome"
-            className="w-full p-2 border rounded-md"
-          />
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle>Biblioteca de Faturas</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label
+              htmlFor="clientNumber"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Número do Cliente
+            </label>
+            <Input
+              id="clientNumber"
+              type="text"
+              value={clientNumber}
+              onChange={(e) => setClientNumber(e.target.value)}
+              placeholder="Digite o número do cliente"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="period"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Período de Análise
+            </label>
+            <Select value={period} onValueChange={setPeriod}>
+              <SelectTrigger id="period">
+                <SelectValue placeholder="Selecione um período" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="1m">Último mês</SelectItem>
+                <SelectItem value="3m">Últimos 3 meses</SelectItem>
+                <SelectItem value="6m">Últimos 6 meses</SelectItem>
+                <SelectItem value="1y">Último ano</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="space-y-2">
-          <label
-            htmlFor="date"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Data
-          </label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-        <div className="space-y-2">
-          <label
-            htmlFor="period"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Período
-          </label>
-          <select
-            id="period"
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="">Selecione um período</option>
-            <option value="7d">Últimos 7 dias</option>
-            <option value="30d">Últimos 30 dias</option>
-            <option value="3m">Últimos 3 meses</option>
-            <option value="1y">Último ano</option>
-          </select>
-        </div>
-      </div>
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Lista de Itens</h3>
-        <ul className="space-y-2">
-          {["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"].map(
-            (item, index) => (
-              <li key={index} className="p-2 bg-gray-100 rounded">
-                {item}
-              </li>
-            )
-          )}
-        </ul>
-      </div>
-    </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Número do Cliente</TableHead>
+              <TableHead>Nome do Cliente</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Valor a Pagar</TableHead>
+              <TableHead>Ação</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredInvoices.map((invoice) => (
+              <TableRow key={invoice.id}>
+                <TableCell>{invoice.clientNumber}</TableCell>
+                <TableCell>{invoice.nomeCliente}</TableCell>
+                <TableCell>{invoice.data}</TableCell>
+                <TableCell>{invoice.valorAPagar}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleDownload(invoice.fileName)}>
+                    Download
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
-};
-export default ListTab;
+}
