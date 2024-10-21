@@ -8,23 +8,34 @@ git clone https://github.com/willcordeiro/front-invoices.git
 cd seu-repositorio
 
 # 3. Instale as dependências
+```
 npm install
+```
 # ou
+```
 yarn install
+```
 
 # 4. Crie o arquivo .env com a variável VITE_API_URL
 echo "VITE_API_URL=http://localhost:5000/" > .env
 
 # 5. Inicie a aplicação localmente
+```
 npm run dev
+```
 # ou
+```
 yarn dev
+```
 
 # 6. Acesse a aplicação no navegador
 # A aplicação estará disponível em:
-echo "Abra http://localhost:3000 no seu navegador"
-
+```
+"http://localhost:3000"
+```
 # 6. Acesse a aplicação no online no deploy
-echo "Abra https://front-invoices-one.vercel.app/ no seu navegador"
-
+Abra  no seu navegador
+```
+https://front-invoices-one.vercel.app
+```
 
