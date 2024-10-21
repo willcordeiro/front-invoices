@@ -1,9 +1,10 @@
 # Passos para rodar a aplicação React com Vite e .env
 
-```bash
-# 1. Clone o repositório
-git clone https://github.com/willcordeiro/front-invoices.git
 
+# 1. Clone o repositório
+```
+git clone https://github.com/willcordeiro/front-invoices.git
+```
 # 2. Navegue até o diretório do projeto
 cd seu-repositorio
 
