@@ -18,8 +18,9 @@ yarn install
 ```
 
 # 4. Crie o arquivo .env com a variável VITE_API_URL
-echo "VITE_API_URL=http://localhost:5000/" > .env
-
+```
+"VITE_API_URL=http://localhost:5000/"
+```
 # 5. Inicie a aplicação localmente
 ```
 npm run dev
@@ -30,7 +31,7 @@ yarn dev
 ```
 
 # 6. Acesse a aplicação no navegador
-# A aplicação estará disponível em:
+A aplicação estará disponível em:
 ```
 "http://localhost:3000"
 ```
