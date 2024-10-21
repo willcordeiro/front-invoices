@@ -1,9 +1,27 @@
-# React + Vite
+# Passos para rodar a aplicação React com Vite e .env
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+```bash
+# 1. Clone o repositório
+git clone https://github.com/willcordeiro/front-invoices.git
 
-Currently, two official plugins are available:
+# 2. Navegue até o diretório do projeto
+cd seu-repositorio
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# front-invoices
+# 3. Instale as dependências
+npm install
+# ou
+yarn install
+
+# 4. Crie o arquivo .env com a variável VITE_API_URL
+echo "VITE_API_URL=http://localhost:5000/" > .env
+
+# 5. Inicie a aplicação localmente
+npm run dev
+# ou
+yarn dev
+
+# 6. Acesse a aplicação no navegador
+# A aplicação estará disponível em:
+echo "Abra http://localhost:3000 no seu navegador"
+
+
