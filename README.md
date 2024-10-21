@@ -24,4 +24,7 @@ yarn dev
 # A aplicação estará disponível em:
 echo "Abra http://localhost:3000 no seu navegador"
 
+# 6. Acesse a aplicação no online no deploy
+echo "Abra https://front-invoices-one.vercel.app/ no seu navegador"
+
 
